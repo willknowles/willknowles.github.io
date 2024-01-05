@@ -48,6 +48,11 @@ var shannon = { name: "Shannon" };
 var mischa = { name: "Mischa" };
 var paul = { name: "Paul" };
 var ben = { name: "Ben" };
+var nathan = { name: "Nathan" };
+var neil = { name: "Neil" };
+var roger = { name: "Roger" };
+var lev = { name: "Lev" };
+var michael = { name: "Michael" };
 
 var selectedNode = null;
 var selectedDataSet = null;
@@ -89,18 +94,28 @@ var nodeSet = [
   shannon,
   mischa,
   paul,
-  ben
+  ben,
+  nathan,
+  neil,
+  roger,
+  lev,
+  michael,
+  
 ];
 
 var edges = [];
 
 var worked = [
-  [will, monica, deirdre, kappi],
-  
+  [will, monica, deirdre, kappi, 0],
+  [kappi, kobi, eric, mcp, erika, 0],
+  [nathan, kyle, matts, mcp, michael, 1],
+  [nathan, kyle, matts, mcp, eric, michael, 0],
+  [cali, chelsea, 0],
+  [hannah, lev, 0],
 ]
 var roommates = [
   [will, kyle, hannah, pia, 1], //motel
-  [matts, mcp, eric, kyle, brittj, 0], //roost
+  [matts, mcp, eric, kyle, brittj, nathan, neil, roger, michael, 0], //roost
   [erika, will, kappi, storm, 0], // rodeo
   [matts, elena, ravi, eric, kaija, 0], // bratold
   [matts, elena, eric, 1], //brattcurr
@@ -126,6 +141,7 @@ var hookups = [
   [cali, cezanne],
   [monica, cubby],
   [matts, elena],
+  [monica, nathan],
   [mcp, simone],
   [mcp, emily],
   [emily, kobi],
@@ -144,12 +160,15 @@ var hookups = [
   [ben, hayley],
   [ben, kaija],
   [ben, chelsea],
-  [becca, kaija]
+  [becca, kaija],
+  [lev, eric],
+  [lev, kaija],
+  [brian, kaija],
 ];
 
 var school = [
   [eric, matts], //gunn
-  [eric, mcp, sylvie, kaija, becca, hannah], //davis
+  [eric, mcp, sylvie, kaija, becca, hannah, lev, michael], //davis
   [elena, kyle, brittj, simone, joe, maddy, cezanne], //stanford
   [ravi, alex, britts], // cornell
   [brian, alex], // chicago hs
@@ -157,6 +176,7 @@ var school = [
   [emily, chelsea, ben], // hs
   [alisha, britts], //portland hs
   [will, annie, susan], //duke
+  [roger, neil],
 ];
 
 var dated = [
@@ -175,7 +195,10 @@ var dated = [
   [alex, britts,0],
   [cubby, monica,1],
   [elena, matts,1],
-  [shannon, mischa,0]
+  [shannon, mischa,0],
+  [lev, kaija, 0],
+  [lev, eric, 0],
+  [brian, kaija, 0],
 ];
 
 function initializeLocations() {
@@ -281,7 +304,7 @@ function getRandCoord() {
 
 function showDataSet(set) {
   getEdges(set);
-  let lastNumIsCurrent = (set == roommates || set == dated)
+  let lastNumIsCurrent = (set == roommates || set == dated || set == worked)
       let lastNodeIndex = lastNumIsCurrent ? r.length - 1 : r.length;
   
   for (let i = 0; i < edges.length; i++) {
