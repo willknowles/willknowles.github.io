@@ -1,5 +1,5 @@
-let MAX_WIDTH = 800;
-let MAX_HEIGHT = 600;
+let MAX_WIDTH = window.innerWidth - 50;
+let MAX_HEIGHT = window.innerHeight - 50;
 
 var canvas = document.getElementById("myc");
 canvas.height = MAX_HEIGHT;
