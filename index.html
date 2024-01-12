@@ -1,11 +1,9 @@
-    <div style="display:inline;">
+<span style="font: 18px arial"> 
+<div style="display:inline;">
         <input type="radio" name="size" value="XS" id="roommates" checked="true"> 
         <label for="xs">Lived together</label>
     </div>
-    <div style="display:inline;">
-        <input type="radio" name="size" value="S" id="hookup">
-        <label for="s">Hooked up</label>
-    </div>    
+     
   <div style="display:inline;">
         <input type="radio" name="size" value="S" id="dated">
         <label for="s">Dated</label>
@@ -18,7 +16,11 @@
         <input type="radio" name="size" value="S" id="work">
         <label for="s">Coworkers</label>
     </div>
+  <div style="display:inline; visibility: hidden;" id="hookupParent">
+        <input type="radio" name="size" value="S" id="hookup">
+        <label for="s">Hooked up</label>
+    </div>
+</span> 
 
 
 <canvas id="myc" width="700px" height="600px" style="border:1px solid #000000;"></canvas>
-<script src="script.js"></script>
