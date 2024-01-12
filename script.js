@@ -8,6 +8,7 @@ var ctx = canvas.getContext("2d");
 var fontSize = 12;
 ctx.font = fontSize + "pt Arial";
 ctx.textAlign = "center";
+var eggCounter = 0;
 
 var will = { name: "Will" };
 var kyle = { name: "Kyle" };
@@ -53,6 +54,8 @@ var neil = { name: "Neil" };
 var roger = { name: "Roger" };
 var lev = { name: "Lev" };
 var michael = { name: "Michael" };
+var letti = { name: "Letti" };
+var julia = { name: "Julia" };
 
 var selectedNode = null;
 var selectedDataSet = null;
@@ -100,19 +103,23 @@ var nodeSet = [
   roger,
   lev,
   michael,
-  
+  letti,
+  annie,
+  susan,
+  julia
 ];
 
 var edges = [];
 
 var worked = [
   [will, monica, deirdre, kappi, 0],
-  [kappi, kobi, eric, mcp, erika, 0],
+  [kappi, kobi, eric, mcp, erika, letti, 0],
   [nathan, kyle, matts, mcp, michael, 1],
   [nathan, kyle, matts, mcp, eric, michael, 0],
   [cali, chelsea, 0],
-  [hannah, lev, 0],
-]
+  [hannah, lev, 0]
+];
+
 var roommates = [
   [will, kyle, hannah, pia, 1], //motel
   [matts, mcp, eric, kyle, brittj, nathan, neil, roger, michael, 0], //roost
@@ -120,7 +127,7 @@ var roommates = [
   [matts, elena, ravi, eric, kaija, 0], // bratold
   [matts, elena, eric, 1], //brattcurr
   [kaija, storm, ravi, 1], // bernal
-  [mcp, matts, eric, storm, britts, joe, sylvie, maddy, alisha, 0], // swamp
+  [mcp, matts, eric, storm, britts, joe, sylvie, maddy, alisha, letti, 0], // swamp
   [simone, mcp], //
   [will, emily, kobi, kappi, erika, chelsea, deirdre, kyle, 0], // pizza castle
   [chelsea, erika, emily, madison, 0], // babeville
@@ -130,7 +137,8 @@ var roommates = [
   [annie, susan, 0],
   [kobi, emily, shannon, mischa, paul, 0],
   [kobi, emily, shannon, 1],
-  [alex, brian, 0]
+  [alex, brian, 0],
+  [roger, neil, letti, 1]
 ];
 var hookups = [
   [will, hannah, kyle, pia],
@@ -163,10 +171,11 @@ var hookups = [
   [becca, kaija],
   [lev, eric],
   [lev, kaija],
-  [brian, kaija],
+  [brian, kaija]
 ];
 
 var school = [
+  [mcp, ravi], //scruz
   [eric, matts], //gunn
   [eric, mcp, sylvie, kaija, becca, hannah, lev, michael], //davis
   [elena, kyle, brittj, simone, joe, maddy, cezanne], //stanford
@@ -175,8 +184,8 @@ var school = [
   [emily, madison, erika], //chico
   [emily, chelsea, ben], // hs
   [alisha, britts], //portland hs
-  [will, annie, susan], //duke
-  [roger, neil],
+  [will, annie, susan, julia], //duke
+  [roger, neil] //canada
 ];
 
 var dated = [
@@ -191,14 +200,14 @@ var dated = [
   [mcp, emily, 0],
   [mcp, simone, 1],
   [cali, cezanne, 1],
-  [storm, ravi,1],
-  [alex, britts,0],
-  [cubby, monica,1],
-  [elena, matts,1],
-  [shannon, mischa,0],
+  [storm, ravi, 1],
+  [alex, britts, 0],
+  [cubby, monica, 1],
+  [elena, matts, 1],
+  [shannon, mischa, 0],
   [lev, kaija, 0],
   [lev, eric, 0],
-  [brian, kaija, 0],
+  [brian, kaija, 0]
 ];
 
 function initializeLocations() {
@@ -230,7 +239,6 @@ function drawNodes() {
     ctx.fillStyle = "#7BAFD4";
     ctx.globalAlpha = shouldDarkenNode ? ".3" : ".9";
     ctx.fill();
-    
 
     ctx.fillStyle = "black";
     ctx.fillText(node.name, node.x, node.y + fontSize / 2);
@@ -240,15 +248,20 @@ function drawNodes() {
 
 function getEdges(set) {
   edges = [];
-  let lastNumIsCurrent = (set == roommates || set == dated || set == worked) ;
+  let lastNumIsCurrent = set == roommates || set == dated || set == worked;
+  console.log("HERE!");
+  
+  console.log (lastNumIsCurrent)
   for (let i = 0; i < set.length; i++) {
     r = set[i];
     let lastNodeIndex = lastNumIsCurrent ? r.length - 1 : r.length;
+      console.log (lastNodeIndex);
+
     for (let j = 0; j < lastNodeIndex; j++) {
-      for (let k = j+1; k < lastNodeIndex; k++) {
+      for (let k = j + 1; k < lastNodeIndex; k++) {
         if (!checkIfInEdges(r[j], r[k])) {
           if (lastNumIsCurrent) {
-            console.log(r)
+            // console.log(r);
             edges.push([r[j], r[k], r[lastNodeIndex]]);
           } else {
             edges.push([r[j], r[k]]);
@@ -257,38 +270,41 @@ function getEdges(set) {
           let v = indexOfEdge(r[j], r[k]);
           if (lastNumIsCurrent && !edges[v][2] && r[lastNodeIndex]) {
             edges.splice(v, 1);
-            edges.push([r[j], r[k], true])
+            edges.push([r[j], r[k], true]);
           }
         }
       }
     }
   }
+  // console.log(edges)
 }
 
 function checkIfInEdges(a, b) {
   for (let i = 0; i < edges.length; i++) {
-    if ((edges[i][0] == a && edges[i][1] == b) ||
-        (edges[i][0] == b && edges[i][1] == a)) {
+    if (
+      (edges[i][0] == a && edges[i][1] == b) ||
+      (edges[i][0] == b && edges[i][1] == a)
+    ) {
       return true;
     }
   }
   return false;
 }
 
-function indexOfEdge(a,b) {
-    for (let i = 0; i < edges.length; i++) {
-    if ((edges[i][0] == a && edges[i][1] == b) ||
-        (edges[i][0] == b && edges[i][1] == a)) {
+function indexOfEdge(a, b) {
+  for (let i = 0; i < edges.length; i++) {
+    if (
+      (edges[i][0] == a && edges[i][1] == b) ||
+      (edges[i][0] == b && edges[i][1] == a)
+    ) {
       return i;
     }
   }
   return -1;
 }
 
-
-
 function getRandCoord() {
-  let THRESHHOLD = 60;
+  let THRESHHOLD = 50;
   randx = Math.random() * (MAX_WIDTH - 60) + 30;
   randy = Math.random() * (MAX_HEIGHT - 60) + 30;
   for (let i = 0; i < nodeSet.length; i++) {
@@ -304,28 +320,28 @@ function getRandCoord() {
 
 function showDataSet(set) {
   getEdges(set);
-  let lastNumIsCurrent = (set == roommates || set == dated || set == worked)
-      let lastNodeIndex = lastNumIsCurrent ? r.length - 1 : r.length;
-  
+  let lastNumIsCurrent = set == roommates || set == dated || set == worked;
+
   for (let i = 0; i < edges.length; i++) {
     let e = edges[i];
-            let isDark =
-          selectedNode != null && selectedNode != e[0] && selectedNode != e[1];
-        if (lastNumIsCurrent) {
-          ctx.strokeStyle = e[lastNodeIndex] ? "#40b040" : "#b04040";
-          lastNumIsCurrent;
-          ctx.lineWidth = e[lastNodeIndex] ? 2 : 1;
-        }
+      let lastNodeIndex = lastNumIsCurrent ? e.length - 1 : e.length;
 
-        ctx.beginPath();
-        ctx.globalAlpha = isDark ? ".05" : "1";
-        ctx.moveTo(e[0].x, e[0].y);
-        ctx.lineTo(e[1].x, e[1].y);
+    let isDark =
+      selectedNode != null && selectedNode != e[0] && selectedNode != e[1];
+    if (lastNumIsCurrent) {
+      ctx.strokeStyle = e[lastNodeIndex] ? "#40b040" : "#b04040";
+      ctx.lineWidth = e[lastNodeIndex] ? 2 : 1;
+    }
 
-        ctx.stroke();
-        ctx.strokeStyle = "black";
-        ctx.globalAlpha = 1;
-        ctx.lineWidth = 1;    
+    ctx.beginPath();
+    ctx.globalAlpha = isDark ? ".05" : "1";
+    ctx.moveTo(e[0].x, e[0].y);
+    ctx.lineTo(e[1].x, e[1].y);
+
+    ctx.stroke();
+    ctx.strokeStyle = "black";
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 1;
   }
 }
 
@@ -370,20 +386,32 @@ canvas.addEventListener("click", (e) => {
     ) {
       selectedNode = nodeSet[i];
       drawNodes();
+      if (nodeSet[i] == will) {
+        eggCounter++;
+        if (eggCounter > 2) {
+          document.getElementById("hookupParent").style["visibility"] =
+            "visible";
+        }
+      } else {
+        eggCounter = 0;
+      }
       return;
     }
   }
   selectedNode = null;
   drawNodes();
-  
 });
 
-// selectedNode = sylvie;
-selectedDataSet = roommates;
+function initializeLoop() {
+  initializeLocations();
+  selectedDataSet = roommates;
 
-initializeLocations();
-// showDataSet(roommates);
-// showDataSet(hookups);
-drawNodes();
+  // showDataSet(roommates);
+  // showDataSet(hookups);
+  drawNodes();
+}
+
+// selectedNode = sylvie;
 // drawNodesSpotlight([will, erika]);
 
+initializeLoop();
