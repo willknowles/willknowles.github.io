@@ -119,9 +119,6 @@ var worked = [
   [hannah, lev, 0]
 ];
 
-// Currently this data is hidden initially and can only be shown by activating the 
-// easter egg, in this case by tapping the 'will' node 3 times in a row. see the part
-// labeled 'easter egg code' below
 var roommates = [
   [will, kyle, hannah, pia, 1], //motel
   [matts, mcp, eric, kyle, brittj, nathan, neil, roger, michael, 0], //roost
@@ -143,6 +140,10 @@ var roommates = [
   [roger, neil, letti, 1],
   [anna, max, 1],
 ];
+
+// Currently the hookups data is hidden initially and can only be shown by activating the 
+// easter egg, in this case by tapping the 'will' node 3 times in a row. see the part
+// labeled 'easter egg code' below
 var hookups = [
   [will, hannah, pia],
   [hannah, kyle],
@@ -190,7 +191,7 @@ var school = [
   [ravi, alex, britts], // cornell
   [brian, alex], // chicago hs
   [emily, madison, erika], //chico
-  [emily, chelsea, ben], // hs
+  [emily, chelsea, ben], // peninsula hs
   [alisha, britts], //portland hs
   [will, annie, susan, julia], //duke
   [roger, neil], //canada
