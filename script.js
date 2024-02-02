@@ -1,14 +1,5 @@
-let MAX_WIDTH = window.innerWidth - 50;
-let MAX_HEIGHT = window.innerHeight - 50;
 
-var canvas = document.getElementById("myc");
-canvas.height = MAX_HEIGHT;
-canvas.width = MAX_WIDTH;
-var ctx = canvas.getContext("2d");
-var fontSize = 12;
-ctx.font = fontSize + "pt Arial";
-ctx.textAlign = "center";
-var eggCounter = 0;
+// define all your people here. you just have to make each person an object and add it to the nodeSet
 
 var will = { name: "Will" };
 var kyle = { name: "Kyle" };
@@ -56,6 +47,8 @@ var lev = { name: "Lev" };
 var michael = { name: "Michael" };
 var letti = { name: "Letti" };
 var julia = { name: "Julia" };
+var anna = { name: "Anna" };
+var max = { name: "Max" };
 
 var selectedNode = null;
 var selectedDataSet = null;
@@ -106,10 +99,16 @@ var nodeSet = [
   letti,
   annie,
   susan,
-  julia
+  julia,
+  anna,
+  max
 ];
 
-var edges = [];
+
+// fill out the data sets here. some of the data types have a number at the end of 
+// each connection list, to indicate whether it is a current connection or not. for
+// example, "[will, kyle, hannah, pia, 1]" in 'roommates' means that those 4 people
+// currently live together.
 
 var worked = [
   [will, monica, deirdre, kappi, 0],
@@ -120,6 +119,9 @@ var worked = [
   [hannah, lev, 0]
 ];
 
+// Currently this data is hidden initially and can only be shown by activating the 
+// easter egg, in this case by tapping the 'will' node 3 times in a row. see the part
+// labeled 'easter egg code' below
 var roommates = [
   [will, kyle, hannah, pia, 1], //motel
   [matts, mcp, eric, kyle, brittj, nathan, neil, roger, michael, 0], //roost
@@ -138,14 +140,18 @@ var roommates = [
   [kobi, emily, shannon, mischa, paul, 0],
   [kobi, emily, shannon, 1],
   [alex, brian, 0],
-  [roger, neil, letti, 1]
+  [roger, neil, letti, 1],
+  [anna, max, 1],
 ];
 var hookups = [
-  [will, hannah, kyle, pia],
-  [will, kappi, kaija, joe],
+  [will, hannah, pia],
+  [hannah, kyle],
+  [kaija, joe],
+  [kappi, joe],
   [will, joe, becca],
   [will, madison],
   [will, cali],
+  [will, kappi, kaija],
   [cali, cezanne],
   [monica, cubby],
   [matts, elena],
@@ -166,12 +172,14 @@ var hookups = [
   [kappi, paul],
   [madison, paul],
   [ben, hayley],
+  [will, hayley], 
   [ben, kaija],
   [ben, chelsea],
   [becca, kaija],
   [lev, eric],
   [lev, kaija],
-  [brian, kaija]
+  [brian, kaija],
+  [anna, max],
 ];
 
 var school = [
@@ -185,7 +193,8 @@ var school = [
   [emily, chelsea, ben], // hs
   [alisha, britts], //portland hs
   [will, annie, susan, julia], //duke
-  [roger, neil] //canada
+  [roger, neil], //canada
+  [anna, max, kappi], //brown
 ];
 
 var dated = [
@@ -206,9 +215,27 @@ var dated = [
   [elena, matts, 1],
   [shannon, mischa, 0],
   [lev, kaija, 0],
-  [lev, eric, 0],
-  [brian, kaija, 0]
+  [brian, kaija, 0],
+  [anna, max, 1],
 ];
+
+
+
+//initialize the canvas
+let MAX_WIDTH = window.innerWidth - 50;
+let MAX_HEIGHT = window.innerHeight - 50;
+
+var canvas = document.getElementById("myc");
+canvas.height = MAX_HEIGHT;
+canvas.width = MAX_WIDTH;
+var ctx = canvas.getContext("2d");
+var fontSize = 12;
+ctx.font = fontSize + "pt Arial";
+ctx.textAlign = "center";
+var eggCounter = 0;
+
+var edges = [];
+
 
 function initializeLocations() {
   for (let i = 0; i < nodeSet.length; i++) {
@@ -249,9 +276,6 @@ function drawNodes() {
 function getEdges(set) {
   edges = [];
   let lastNumIsCurrent = set == roommates || set == dated || set == worked;
-  console.log("HERE!");
-  
-  console.log (lastNumIsCurrent)
   for (let i = 0; i < set.length; i++) {
     r = set[i];
     let lastNodeIndex = lastNumIsCurrent ? r.length - 1 : r.length;
@@ -276,7 +300,6 @@ function getEdges(set) {
       }
     }
   }
-  // console.log(edges)
 }
 
 function checkIfInEdges(a, b) {
@@ -386,6 +409,7 @@ canvas.addEventListener("click", (e) => {
     ) {
       selectedNode = nodeSet[i];
       drawNodes();
+      // easter egg code
       if (nodeSet[i] == will) {
         eggCounter++;
         if (eggCounter > 2) {
@@ -405,13 +429,7 @@ canvas.addEventListener("click", (e) => {
 function initializeLoop() {
   initializeLocations();
   selectedDataSet = roommates;
-
-  // showDataSet(roommates);
-  // showDataSet(hookups);
   drawNodes();
 }
-
-// selectedNode = sylvie;
-// drawNodesSpotlight([will, erika]);
 
 initializeLoop();
